@@ -1,0 +1,74 @@
+apply plugin: "java"
+apply plugin: "eclipse"
+apply plugin: "idea"
+
+/*
+ * as of May 2015 Blackboard is only certified to run in a Java 7 JVM
+ * so most Blackboard servers run Java 7 and will not run code compiled
+ * for the Java 8 JVM
+ */
+sourceCompatibility = 1.7
+
+ext {
+  /*
+   * alternatives:
+   *  October 2014 - 9.1.201410.160373
+   *  April 2014   - 9.1.201404.160205
+   *  SP14         - 9.1.140152.0
+   */
+  learnVersion = "9.1.201410.160373"
+}
+
+version "0.1"
+jar.baseName = "bb-admingroup"
+jar.destinationDir = new File(".")
+
+test {
+  systemProperty "bbservices_config", "blackboard/config/service-config-unittest.properties"
+  include "**/*Suite*"
+}
+
+
+repositories {
+  mavenCentral()
+  maven {
+    url "https://maven.blackboard.com/content/repositories/releases/"
+  }
+}
+
+
+dependencies {
+  /*
+   * none of these libraries should be included in your building block
+   * as they are already available in Blackboard's systemlib
+   */
+  compile("blackboard.platform:bb-platform:$learnVersion") { transitive = false }
+  compile "com.google.code.findbugs:annotations:3.0.0",
+          "com.google.guava:guava:17.0"
+
+  testCompile "junit:junit:4.12"
+  testCompile "javax.servlet:javax.servlet-api:3.0.1"
+
+  testCompile fileTree(dir: "blackboard/systemlib", include: ['**/*.jar'])
+
+  /*
+   * read blackboard/systemlib/readme.md before activating this dependency
+   */
+//  testCompile "commons-dbcp:commons-dbcp:1.4",
+//          "commons-lang:commons-lang:2.4",
+//          "net.sf.ehcache:ehcache:2.8.2",
+//          "com.esotericsoftware.kryo:kryo:2.24.0",
+//          "javax.mail:mail:1.4.7",
+//          "com.newrelic.agent.java:newrelic-api:3.14.0",
+//          "org.slf4j:slf4j-api:1.6.3",
+//          "org.slf4j:slf4j-log4j12:1.6.3",
+//          "org.postgresql:postgresql:9.2-1002-jdbc4",
+//          "org.apache.tomcat:tomcat-jdbc:7.0.59",
+//          "org.apache.lucene:lucene-core:2.9.4",
+//          "org.apache.commons:commons-lang3:3.3.2"
+}
+
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.4'
+}
