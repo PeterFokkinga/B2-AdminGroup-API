@@ -13,7 +13,11 @@ available on localhost:5432 which is absolutely essential).
 
 After starting the Vagrant image copy the entire `/usr/local/blackboard/config` 
 directory into this directory (so you end up with blackboard/config). Run 
-`clean-config.sh` to remove the cruft from the config directory.
+`clean-config.sh` to remove the cruft from the config directory and to modify
+the external-sql.properties file.
+
+If you are on windows and can't run `clean-config.sh` change external-sql.properties
+by hand: remove /usr/local/ (/usr/local/blackboard/config becomes blackboard/config).
 
 Next up: [getting the dependencies](systemlib/readme.md)
 

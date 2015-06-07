@@ -22,6 +22,7 @@ repository.
 The following libraries are also required, but they are also available from 
 Maven Central. Either uncomment the dependencies in the build.gradle or copy
 these files from the Blackboard systemlib directory.
+& commons-collections-3.2.1.jar
 * commons-dbcp-1.4.jar
 * commons-lang-2.4.jar
 * ehcache-core.jar
@@ -32,6 +33,7 @@ these files from the Blackboard systemlib directory.
 * slf4j-api.jar
 * slf4j-log4j12.jar
 * tomcat-juli.jar
+* velocity-1.7.jar
 * jdbc/postgresql.jdbc4.jar
 * jdbc/tomcat-jdbc.jar
 * lucene/lucene-core.jar

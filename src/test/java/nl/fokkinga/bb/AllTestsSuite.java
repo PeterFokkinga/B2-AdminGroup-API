@@ -10,6 +10,7 @@ import blackboard.data.course.Group;
 import blackboard.persist.PersistenceException;
 import blackboard.persist.course.CourseDbPersister;
 import blackboard.persist.course.GroupDbPersister;
+import nl.fokkinga.bb.admingroup.GroupCodeDAOTest;
 import nl.fokkinga.bb.admingroup.GroupCodeTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -20,10 +21,11 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses( {
 		UtilTest.class
 		, GroupCodeTest.class
+		, GroupCodeDAOTest.class
 })
 
 public class AllTestsSuite {
-	public static Course crs;
+	public static Course crs, crsTwo;
 	public static Group mainGroupSet;
 
 
@@ -34,6 +36,12 @@ public class AllTestsSuite {
 		crs.setTitle("JUnit GroupCreateTest");
 		crs.setIsAvailable(true);
 		CourseDbPersister.Default.getInstance().persist(crs);
+
+		crsTwo = new Course();
+		crsTwo.setCourseId("junit.GroupCreateTest2");
+		crsTwo.setTitle("JUnit GroupCreateTest - 2");
+		crsTwo.setIsAvailable(true);
+		CourseDbPersister.Default.getInstance().persist(crsTwo);
 
 		mainGroupSet = new Group();
 		mainGroupSet.setIsAvailable(true);
@@ -46,6 +54,8 @@ public class AllTestsSuite {
 
 	@AfterClass
 	public static void removeCourse() throws PersistenceException {
-		CourseDbPersister.Default.getInstance().deleteById(crs.getId());
+		CourseDbPersister dao = CourseDbPersister.Default.getInstance();
+		dao.deleteById(crs.getId());
+		dao.deleteById(crsTwo.getId());
 	}
 }

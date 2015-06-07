@@ -16,6 +16,9 @@ rm -rf keystores oracle* plugins config-support
 rm -rf tomcat* update-tool-vm support
 rm -rf license/backups
 
+cat external-sql.properties | sed 's#/usr/local/##' > .tmp
+mv .tmp external-sql.properties
+
 rm -f *.bb *.template remove* webcas.properties http* bb-sif*
 rm -f service-config-[a-sv]*.properties service-config.properties
 rm -f bb-tasks.xml bb-tasks-collab.xml *.unix.xml bb-datastores-* auth*
