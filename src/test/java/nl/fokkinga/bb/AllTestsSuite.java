@@ -1,9 +1,5 @@
 package nl.fokkinga.bb;
 
-/**
- * @author <a href="mailto:p.r.fokkinga [at] rug.nl">Peter Fokkinga</a>
- */
-
 import blackboard.data.ValidationException;
 import blackboard.data.course.Course;
 import blackboard.data.course.Group;
@@ -15,12 +11,17 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+/**
+ * @author <a href="mailto:peter [at] fokkinga.nl">Peter Fokkinga</a>
+ */
+
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
 		UtilTest.class
 		, GroupCodeTest.class
 		, GroupCodeDAOTest.class
 		, AdminGroupTest.class
+		, StrictManagerTest.class
 })
 
 public class AllTestsSuite {

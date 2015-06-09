@@ -10,7 +10,7 @@ import static org.junit.Assert.fail;
 
 
 /**
- * @author <a href="p.r.fokkinga [at] rug.nl">Peter Fokkinga</a>
+ * @author <a href="mailto:peter [at] fokkinga.nl">Peter Fokkinga</a>
  */
 public class AdminGroupTest {
 
