@@ -1,17 +1,15 @@
 package nl.fokkinga.bb;
 
 /**
- * @author <a href="p.r.fokkinga [at] rug.nl">Peter Fokkinga</a>
+ * @author <a href="mailto:p.r.fokkinga [at] rug.nl">Peter Fokkinga</a>
  */
 
 import blackboard.data.ValidationException;
 import blackboard.data.course.Course;
 import blackboard.data.course.Group;
 import blackboard.persist.PersistenceException;
-import blackboard.persist.course.CourseDbPersister;
-import blackboard.persist.course.GroupDbPersister;
-import nl.fokkinga.bb.admingroup.GroupCodeDAOTest;
-import nl.fokkinga.bb.admingroup.GroupCodeTest;
+import blackboard.persist.course.*;
+import nl.fokkinga.bb.admingroup.*;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -22,6 +20,7 @@ import org.junit.runners.Suite;
 		UtilTest.class
 		, GroupCodeTest.class
 		, GroupCodeDAOTest.class
+		, AdminGroupTest.class
 })
 
 public class AllTestsSuite {
@@ -31,12 +30,20 @@ public class AllTestsSuite {
 
 	@BeforeClass
 	public static void setupCourse() throws PersistenceException, ValidationException {
+		try {
+			crs = CourseDbLoader.Default.getInstance().loadByCourseId("junit.GroupCreateTest");
+			CourseDbPersister.Default.getInstance().deleteById(crs.getId());
+		} catch (PersistenceException e) { /* don't care */ }
 		crs = new Course();
 		crs.setCourseId("junit.GroupCreateTest");
 		crs.setTitle("JUnit GroupCreateTest");
 		crs.setIsAvailable(true);
 		CourseDbPersister.Default.getInstance().persist(crs);
 
+		try {
+			crsTwo = CourseDbLoader.Default.getInstance().loadByCourseId("junit.GroupCreateTest2");
+			CourseDbPersister.Default.getInstance().deleteById(crsTwo.getId());
+		} catch (PersistenceException e) { /* don't care */ }
 		crsTwo = new Course();
 		crsTwo.setCourseId("junit.GroupCreateTest2");
 		crsTwo.setTitle("JUnit GroupCreateTest - 2");

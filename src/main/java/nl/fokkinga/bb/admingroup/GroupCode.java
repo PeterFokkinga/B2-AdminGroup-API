@@ -162,7 +162,9 @@ public class GroupCode extends AbstractIdentifiable {
 		if (!Id.isValidPkId(courseId)) {
 			ve.addWarning(new ValidationWarning("Required field not set", "CourseId value must be set."));
 		}
-		if (!Id.isValidPkId(groupId)) {
+		// not checking isValidPkId as that would prevent AdminGroup.validate
+		// from checking the group code of a new group
+		if (!Id.isValid(groupId)) {
 			ve.addWarning(new ValidationWarning("Required field not set", "GroupId value must be set."));
 		}
 		if (isEmpty(batchUid)) {
