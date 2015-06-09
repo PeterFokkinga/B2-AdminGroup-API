@@ -1,12 +1,12 @@
 package nl.fokkinga.bb.admingroup;
 
 import blackboard.data.ValidationException;
-import blackboard.data.course.Course;
-import blackboard.data.course.Group;
+import blackboard.data.course.*;
 import blackboard.persist.Id;
 import blackboard.persist.PersistenceException;
 import blackboard.persist.course.GroupDbLoader;
 import blackboard.persist.course.GroupDbPersister;
+import blackboard.persist.course.impl.GroupDAO;
 import nl.fokkinga.bb.AllTestsSuite;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 
 
 /**
- * @author <a href="p.r.fokkinga [at] rug.nl">Peter Fokkinga</a>
+ * @author <a href="mailto:peter [at] fokkinga.nl">Peter Fokkinga</a>
  */
 public class GroupCodeDAOTest {
 	Course crs, crs2;
@@ -156,6 +156,23 @@ public class GroupCodeDAOTest {
 		assertEquals(1, codes.size());
 	}
 
+	@Test
+	public void loadByGroupSetTest() throws PersistenceException, ValidationException, GroupsMismatchException {
+		GroupCodeDAO dao = GroupCodeDAO.get();
+		List<GroupCode> codes = dao.loadByGroupSetId(grpSet.getId());
+		assertNotNull(codes);
+		assertEquals(0, codes.size());
+
+		dao.persist(new GroupCode(grpOne, "foo"));
+		dao.persist(new GroupCode(grpTwo, "bar"));
+		AdminGroupDAO.get().makeGroupMemberOfGroupSet(grpOne.getId(), grpSet.getId());
+		AdminGroupDAO.get().makeGroupMemberOfGroupSet(grpTwo.getId(), grpSet.getId());
+		List<Group> groups = GroupDAO.get().loadGroupSetList(grpSet.getId());
+		assertEquals(2, groups.size());
+
+		codes = dao.loadByGroupSetId(grpSet.getId());
+		assertEquals(2, codes.size());
+	}
 
 	@Test
 	public void deleteByGroupIdTest() {

@@ -18,7 +18,9 @@ package nl.fokkinga.bb.admingroup;
 
 import blackboard.persist.Id;
 import blackboard.persist.PersistenceRuntimeException;
+import blackboard.persist.course.impl.GroupDbMap;
 import blackboard.persist.dao.impl.SimpleDAO;
+import blackboard.persist.impl.SimpleJoinQuery;
 import blackboard.persist.impl.SimpleSelectQuery;
 import blackboard.platform.query.Criteria;
 import blackboard.platform.query.CriterionBuilder;
@@ -27,6 +29,7 @@ import com.google.common.base.Suppliers;
 
 import java.util.List;
 
+import static blackboard.persist.impl.SimpleJoinQuery.JoinType.Inner;
 import static nl.fokkinga.bb.Util.notEmpty;
 
 
@@ -94,7 +97,7 @@ public class GroupCodeDAO extends SimpleDAO<GroupCode> {
 	 */
 	public void deleteByGroupId(Id grpId) {
 		if (grpId == null) {
-			throw new IllegalArgumentException("loadByBatchUid: parameter 'grpId' should not be NULL");
+			throw new IllegalArgumentException("deleteByGroupId: parameter 'grpId' should not be NULL");
 		}
 		List<GroupCode> codes = loadByGroupId(grpId);
 		for (GroupCode groupCode : codes) {
@@ -119,7 +122,7 @@ public class GroupCodeDAO extends SimpleDAO<GroupCode> {
 	 */
 	public List<GroupCode> loadBySourcedId(String src, String id) {
 		if (src == null) {
-			throw new IllegalArgumentException("loadByBatchUid: parameter 'src' should not be NULL");
+			throw new IllegalArgumentException("loadBySourcedId: parameter 'src' should not be NULL");
 		}
 		SimpleSelectQuery query = new SimpleSelectQuery(GroupCode.MAP);
 		if (notEmpty(id)) {
@@ -143,10 +146,33 @@ public class GroupCodeDAO extends SimpleDAO<GroupCode> {
 	 */
 	public List<GroupCode> loadByGroupId(Id grpId) {
 		if (grpId == null) {
-			throw new IllegalArgumentException("loadByBatchUid: parameter 'uid' should not be NULL");
+			throw new IllegalArgumentException("loadByGroupId: parameter 'grpId' should not be NULL");
 		}
 		SimpleSelectQuery query = new SimpleSelectQuery(GroupCode.MAP);
 		query.addWhere("GroupId", grpId);
+		return getDAOSupport().loadList(query);
+	}
+
+
+	/**
+	 * Get all the group codes for all the groups that are part of the given
+	 * group set. The group code of the group set will <em>not</em> be
+	 * included!
+	 *
+	 * @param grpSetId the ID of the group set to find the "child" group codes for
+	 * @return the group codes defined for the groups that are part of the
+	 * group set
+	 * @throws IllegalArgumentException when the {@code grpId} parameter is NULL
+	 */
+	public List<GroupCode> loadByGroupSetId(Id grpSetId) {
+		if (grpSetId == null) {
+			throw new IllegalArgumentException("loadByGroupSetId: parameter 'grpSetId' should not be NULL");
+		}
+		SimpleJoinQuery query = new SimpleJoinQuery(GroupCode.MAP, "gc");
+		query.addJoin(Inner, GroupDbMap.MAP, "g", "id", "GroupId", false);
+		Criteria criteria = query.getCriteria();
+		CriterionBuilder cuBuilder = criteria.createBuilder("g");
+		criteria.add(cuBuilder.equal("setId", grpSetId));
 		return getDAOSupport().loadList(query);
 	}
 
@@ -222,9 +248,9 @@ public class GroupCodeDAO extends SimpleDAO<GroupCode> {
 	 */
 	public boolean isUniqueInCourse(Id crsId, String uid, Id grpId) {
 		if (uid == null) {
-			throw new IllegalArgumentException("isUnique: parameter 'uid' should not be NULL");
+			throw new IllegalArgumentException("isUniqueInCourse: parameter 'uid' should not be NULL");
 		} else if (!Id.isValidPkId(crsId)) {
-			throw new IllegalArgumentException("isUnique: parameter 'crsId' should be a valid ID");
+			throw new IllegalArgumentException("isUniqueInCourse: parameter 'crsId' should be a valid ID");
 		}
 		SimpleSelectQuery query = new SimpleSelectQuery(GroupCode.MAP);
 		Criteria criteria = query.getCriteria();
