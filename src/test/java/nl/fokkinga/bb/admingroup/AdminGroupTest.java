@@ -5,8 +5,7 @@ import blackboard.persist.PersistenceException;
 import nl.fokkinga.bb.AllTestsSuite;
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 
 /**
@@ -18,6 +17,7 @@ public class AdminGroupTest {
 	public void emptyObjectTest() {
 		AdminGroup ag = new AdminGroup();
 		assertTrue(ag.toString().contains("pk1=new"));
+		assertTrue(ag.isNew());
 
 		try {
 			ag.validate();
@@ -45,7 +45,9 @@ public class AdminGroupTest {
 		} catch (ValidationException e) {
 			fail("should validate; " + e.getMessage());
 		}
+		assertTrue(ag.isNew());
 		AdminGroupDAO.get().persist(ag);
+		assertFalse(ag.isNew());
 
 		assertTrue(ag.toString().contains("batch_uid='properobject'"));
 		assertTrue(ag.toString().contains("groupset"));

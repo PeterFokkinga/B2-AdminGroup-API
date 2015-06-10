@@ -108,6 +108,15 @@ public class AdminGroup extends Group {
 
 
 	/**
+	 * Check if this is a newly created group that has not been persisted yet.
+	 * A new group does not have a valid ID.
+	 *
+	 * @return true if this group has not yet been persisted
+	 */
+	public boolean isNew() { return !Id.isValidPkId(getId()); }
+
+
+	/**
 	 * Check whether this group be persisted. Requirements of a valid group
 	 * object are:
 	 * <ul>
