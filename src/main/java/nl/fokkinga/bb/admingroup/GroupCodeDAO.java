@@ -169,6 +169,7 @@ public class GroupCodeDAO extends SimpleDAO<GroupCode> {
 			throw new IllegalArgumentException("loadByGroupSetId: parameter 'grpSetId' should not be NULL");
 		}
 		SimpleJoinQuery query = new SimpleJoinQuery(GroupCode.MAP, "gc");
+		query.setSingleObject(true);
 		query.addJoin(Inner, GroupDbMap.MAP, "g", "id", "GroupId", false);
 		Criteria criteria = query.getCriteria();
 		CriterionBuilder cuBuilder = criteria.createBuilder("g");

@@ -110,10 +110,12 @@ public class GroupCodeDAOTest {
 		dao.persist(new GroupCode(grpOne, "foo"));
 		codes = dao.loadByGroupId(grpOne.getId());
 		assertEquals(1, codes.size());
+		assertEquals(GroupCode.class, codes.get(0).getClass());
 
 		dao.persist(new GroupCode(grpOne, "bar"));
 		codes = dao.loadByGroupId(grpOne.getId());
 		assertEquals(2, codes.size());
+		assertEquals(GroupCode.class, codes.get(0).getClass());
 	}
 
 	@Test
@@ -126,14 +128,17 @@ public class GroupCodeDAOTest {
 		dao.persist(new GroupCode(grpOne, "foo"));
 		codes = dao.loadByBatchUid("foo");
 		assertEquals(1, codes.size());
+		assertEquals(GroupCode.class, codes.get(0).getClass());
 
 		dao.persist(new GroupCode(grpOne, "bar"));
 		codes = dao.loadByBatchUid("foo");
 		assertEquals(1, codes.size());
+		assertEquals(GroupCode.class, codes.get(0).getClass());
 
 		dao.persist(new GroupCode(grpThreeInCrs2, "foo"));
 		codes = dao.loadByBatchUid("foo");
 		assertEquals(2, codes.size());
+		assertEquals(GroupCode.class, codes.get(0).getClass());
 	}
 
 	@Test
@@ -148,12 +153,15 @@ public class GroupCodeDAOTest {
 		dao.persist(new GroupCode(grpTwo, "ng#baz"));
 		codes = dao.loadBySourcedId("", null);
 		assertEquals(dao.loadAll().size(), codes.size());
+		assertEquals(GroupCode.class, codes.get(0).getClass());
 
 		codes = dao.loadBySourcedId("junit", null);
 		assertEquals(2, codes.size());
+		assertEquals(GroupCode.class, codes.get(0).getClass());
 
 		codes = dao.loadBySourcedId("junit", "foo");
 		assertEquals(1, codes.size());
+		assertEquals(GroupCode.class, codes.get(0).getClass());
 	}
 
 	@Test
@@ -172,6 +180,7 @@ public class GroupCodeDAOTest {
 
 		codes = dao.loadByGroupSetId(grpSet.getId());
 		assertEquals(2, codes.size());
+		assertEquals(GroupCode.class, codes.get(0).getClass());
 	}
 
 	@Test
