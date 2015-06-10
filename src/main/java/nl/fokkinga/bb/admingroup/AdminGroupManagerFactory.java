@@ -28,7 +28,7 @@ import blackboard.db.TransactionInterfaceFactory;
  *  batch_uid is unique within a course
  *  group only has one batch_uid
  *
- * Unrestricted
+ * Unrestricted / Permissive
  *  multiple groups in the same course can have the same batch_uid
  *  a single group can have multiple batch_uid values
 

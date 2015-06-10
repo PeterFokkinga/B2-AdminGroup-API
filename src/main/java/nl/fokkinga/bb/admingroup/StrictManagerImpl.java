@@ -5,6 +5,8 @@ import blackboard.persist.*;
 import blackboard.persist.course.GroupDbPersister;
 import blackboard.platform.course.CourseGroupManagerFactory;
 
+import java.util.List;
+
 
 /**
  * @author <a href="mailto:peter [at] fokkinga.nl">Peter Fokkinga</a>
@@ -16,6 +18,21 @@ public class StrictManagerImpl implements AdminGroupManager {
 			return AdminGroupDAO.get().loadById(grpId);
 		} catch (KeyNotFoundException e) { /* don't care */ }
 		return null;
+	}
+
+
+	@Override public AdminGroup loadGroupByBatchUid(String uid) {
+		List<AdminGroup> groups = loadGroupsByBatchUid(uid);
+		return groups.isEmpty() ? null : groups.get(0);
+	}
+
+
+	@Override public List<AdminGroup> loadGroupsByBatchUid(String uid) {
+		List<AdminGroup> result = AdminGroupDAO.get().loadByBatchUid(uid);
+		if (result.size() > 1) {
+			throw new IllegalStateException("multiple groups have batch_uid " + uid);
+		}
+		return result;
 	}
 
 

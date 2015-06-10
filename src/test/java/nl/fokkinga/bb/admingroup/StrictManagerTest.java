@@ -1,14 +1,10 @@
 package nl.fokkinga.bb.admingroup;
 
 import blackboard.data.ValidationException;
-import blackboard.data.course.Course;
 import blackboard.data.course.Group;
 import blackboard.persist.*;
 import blackboard.persist.course.GroupDbLoader;
-import blackboard.persist.course.GroupDbPersister;
 import blackboard.persist.course.impl.GroupDAO;
-import nl.fokkinga.bb.AllTestsSuite;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -19,44 +15,7 @@ import static org.junit.Assert.*;
 /**
  * @author <a href="mailto:peter [at] fokkinga.nl">Peter Fokkinga</a>
  */
-public class StrictManagerTest {
-	Course crs, crs2;
-	Group grpSet, grpOne;
-	GroupCode codeOne;
-
-	@Before
-	public void setup() throws PersistenceException, ValidationException {
-		crs = AllTestsSuite.crs;
-		crs2 = AllTestsSuite.crsTwo;
-		grpSet = AllTestsSuite.mainGroupSet;
-		GroupDbLoader ldr = GroupDbLoader.Default.getInstance();
-		List<Group> groups = ldr.loadByCourseId(crs.getId());
-		groups.addAll(ldr.loadByCourseId(crs2.getId()));
-		GroupDbPersister dao = GroupDbPersister.Default.getInstance();
-		for (Group grp : groups) {
-			if (!grp.isGroupSet()) {
-				dao.deleteById(grp.getId());
-			}
-		}
-		grpOne = new Group();
-		grpOne.setTitle("one");
-		grpOne.setCourseId(crs.getId());
-		dao.persist(grpOne);
-		codeOne = new GroupCode(grpOne, "foo#bar");
-		GroupCodeDAO.get().persist(codeOne);
-	}
-
-	@Test
-	public void loadByIdTest() throws PersistenceException {
-		AdminGroupManager mngr = AdminGroupManagerFactory.getStrictManager();
-		AdminGroup grp = mngr.loadGroupById(Id.generateId(Group.DATA_TYPE, 999L));
-		assertNull(grp);
-
-		grp = mngr.loadGroupById(grpOne.getId());
-		assertNotNull(grp);
-		assertEquals(codeOne, grp.getGroupCode());
-		assertEquals(grpOne.getId(), grp.getId());
-	}
+public class StrictManagerTest extends ManagerTestSetup{
 
 	@Test
 	public void insertTest() throws ValidationException, PersistenceException {

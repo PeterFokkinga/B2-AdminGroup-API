@@ -64,8 +64,14 @@ public class AdminGroup extends Group {
 	@Override public void setCourseId(Id crsId) {
 		// prevent Group.validate from throwing a NPE on a new object
 		super.setCourseId(crsId != null ? crsId : Id.UNSET_ID);
+		groupCode.setCourseId(crsId);
 	}
 
+
+	void setGroupCode(GroupCode value) {
+		groupCode = value;
+		codesLoaded = true;
+	}
 
 	synchronized GroupCode getGroupCode() {
 		if (!codesLoaded && Id.isValidPkId(getId())) {

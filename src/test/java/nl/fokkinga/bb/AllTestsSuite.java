@@ -22,6 +22,7 @@ import org.junit.runners.Suite;
 		, GroupCodeDAOTest.class
 		, AdminGroupTest.class
 		, StrictManagerTest.class
+		, StrictLoadingTest.class
 })
 
 public class AllTestsSuite {
