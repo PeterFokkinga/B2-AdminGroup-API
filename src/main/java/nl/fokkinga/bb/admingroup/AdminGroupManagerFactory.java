@@ -39,10 +39,6 @@ public class AdminGroupManagerFactory {
 			AdminGroupManager.class, new StrictManagerImpl());
 
 
-	public static AdminGroupManager getManager() {
-		return STRICT_MANAGER;
-	}
-
 	public static AdminGroupManager getStrictManager() {
 		return STRICT_MANAGER;
 	}

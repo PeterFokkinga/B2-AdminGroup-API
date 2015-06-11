@@ -14,36 +14,37 @@ import java.util.List;
 public interface AdminGroupManager {
 
 	/**
-	 * Get a group with the given batch_uid. Depending on the implementation
-	 * of the manager the result will be <em>the</em> group identified by the
-	 * batch_uid or just <em>a</em> group having the batch_uid.
+	 * Get a group or group set with the given batch_uid. Depending on the
+	 * implementation of the manager the result will be <em>the</em> group
+	 * identified by the batch_uid or just <em>a</em> group having the batch_uid.
 	 *
 	 * @param uid the batch_uid to search for
-	 * @return a (the) group that has the given batch_uid or NULL when no groups
-	 * could be found
+	 * @return a (the) group or group set that has the given batch_uid or NULL
+	 * when no groups could be found
 	 * @throws IllegalStateException when the batch_uid violates the uniqueness
 	 *                               rules of the group manager implementation
-	 * @see #loadGroupsByBatchUid(String) is a better choice when you're not
+	 * @see #loadByBatchUid(String) is a better choice when you're not
 	 * using the batch_uid as a uniquely identifying property of a group
 	 */
-	AdminGroup loadGroupByBatchUid(String uid);
+	AdminGroup loadSingleByBatchUid(String uid);
 
 	/**
-	 * Get groups with the given batch_uid.
+	 * Get groups (including group sets) with the given batch_uid.
 	 *
 	 * @param uid uid the batch_uid to search for
-	 * @return the groups that have the given batch_uid; the result may be empty
-	 * but is never NULL
+	 * @return the groups and/or group sets that have the given batch_uid; the
+	 * result may be empty but is never NULL
 	 */
-	List<AdminGroup> loadGroupsByBatchUid(String uid);
+	List<AdminGroup> loadByBatchUid(String uid);
 
 	/**
 	 * Get the group identified by the given id.
 	 *
 	 * @param grpId the ID of the group
-	 * @return the group with the given ID or NULL if no such group exists
+	 * @return the group or group set with the given ID or NULL if no such group
+	 * exists
 	 */
-	AdminGroup loadGroupById(Id grpId);
+	AdminGroup loadById(Id grpId);
 
 	/**
 	 * Get all groups belonging to the course.

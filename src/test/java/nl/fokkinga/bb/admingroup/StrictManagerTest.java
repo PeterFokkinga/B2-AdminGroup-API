@@ -78,7 +78,7 @@ public class StrictManagerTest extends ManagerTestSetup{
 	@Test
 	public void updateTest() throws ValidationException, PersistenceException {
 		AdminGroupManager mngr = AdminGroupManagerFactory.getStrictManager();
-		AdminGroup ag = mngr.loadGroupById(grpOne.getId());
+		AdminGroup ag = mngr.loadById(grpOne.getId());
 		assertFalse(ag.getIsAvailable());
 		ag.setTitle("A New Hope");
 		ag.setIsAvailable(true);

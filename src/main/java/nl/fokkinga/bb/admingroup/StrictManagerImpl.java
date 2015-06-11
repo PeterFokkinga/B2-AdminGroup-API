@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class StrictManagerImpl implements AdminGroupManager {
 
-	@Override public AdminGroup loadGroupById(Id grpId) {
+	@Override public AdminGroup loadById(Id grpId) {
 		try {
 			return AdminGroupDAO.get().loadById(grpId);
 		} catch (KeyNotFoundException e) { /* don't care */ }
@@ -21,13 +21,13 @@ public class StrictManagerImpl implements AdminGroupManager {
 	}
 
 
-	@Override public AdminGroup loadGroupByBatchUid(String uid) {
-		List<AdminGroup> groups = loadGroupsByBatchUid(uid);
+	@Override public AdminGroup loadSingleByBatchUid(String uid) {
+		List<AdminGroup> groups = loadByBatchUid(uid);
 		return groups.isEmpty() ? null : groups.get(0);
 	}
 
 
-	@Override public List<AdminGroup> loadGroupsByBatchUid(String uid) {
+	@Override public List<AdminGroup> loadByBatchUid(String uid) {
 		List<AdminGroup> result = AdminGroupDAO.get().loadByBatchUid(uid);
 		if (result.size() > 1) {
 			throw new IllegalStateException("multiple groups have batch_uid " + uid);
@@ -70,7 +70,7 @@ public class StrictManagerImpl implements AdminGroupManager {
 
 
 	@Override public void deleteGroupById(Id grpId) {
-		AdminGroup grp = loadGroupById(grpId);
+		AdminGroup grp = loadById(grpId);
 		if (grp != null) {
 			if (grp.isGroupSet()) {
 				CourseGroupManagerFactory.getInstance().deleteGroupSet(grp.getId());

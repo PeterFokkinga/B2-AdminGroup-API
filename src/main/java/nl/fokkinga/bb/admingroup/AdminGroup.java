@@ -31,6 +31,7 @@ import static nl.fokkinga.bb.Util.notEmpty;
 
 
 /**
+ * A group or group set that has a batch_uid (which may be empty).
  *
  * @author <a href="mailto:peter [at] fokkinga.nl">Peter Fokkinga</a>
  */

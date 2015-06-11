@@ -20,10 +20,10 @@ public class StrictLoadingTest extends ManagerTestSetup {
 	@Test
 	public void loadByIdTest() throws PersistenceException {
 		AdminGroupManager mngr = AdminGroupManagerFactory.getStrictManager();
-		AdminGroup grp = mngr.loadGroupById(Id.generateId(Group.DATA_TYPE, 999L));
+		AdminGroup grp = mngr.loadById(Id.generateId(Group.DATA_TYPE, 999L));
 		assertNull(grp);
 
-		grp = mngr.loadGroupById(grpOne.getId());
+		grp = mngr.loadById(grpOne.getId());
 		assertNotNull(grp);
 		assertEquals(codeOne, grp.getGroupCode());
 		assertEquals(grpOne.getId(), grp.getId());
@@ -32,10 +32,10 @@ public class StrictLoadingTest extends ManagerTestSetup {
 	@Test
 	public void loadGroupByBatchUidTest() throws PersistenceException, ValidationException {
 		AdminGroupManager mngr = AdminGroupManagerFactory.getStrictManager();
-		AdminGroup grp = mngr.loadGroupByBatchUid("xxxxx");
+		AdminGroup grp = mngr.loadSingleByBatchUid("xxxxx");
 		assertNull(grp);
 
-		grp = mngr.loadGroupByBatchUid(codeOne.getBatchUid());
+		grp = mngr.loadSingleByBatchUid(codeOne.getBatchUid());
 		assertNotNull(grp);
 		assertEquals(codeOne.getBatchUid(), grp.getBatchUid());
 		assertEquals(codeOne.getGroupId(), grp.getId());
@@ -50,7 +50,7 @@ public class StrictLoadingTest extends ManagerTestSetup {
 		assertTrue(Id.isValidPkId(c2.getId()));
 
 		try {
-			mngr.loadGroupByBatchUid(codeOne.getBatchUid());
+			mngr.loadSingleByBatchUid(codeOne.getBatchUid());
 			fail("duplicate batch_uid should cause IllegalStateException");
 		} catch (IllegalStateException e) { /* expected behaviour */ }
 	}
@@ -58,11 +58,11 @@ public class StrictLoadingTest extends ManagerTestSetup {
 	@Test
 	public void loadGroupsByBatchUidTest() throws PersistenceException, ValidationException {
 		AdminGroupManager mngr = AdminGroupManagerFactory.getStrictManager();
-		List<AdminGroup> grps = mngr.loadGroupsByBatchUid("xxxxx");
+		List<AdminGroup> grps = mngr.loadByBatchUid("xxxxx");
 		assertNotNull(grps);
 		assertEquals(0, grps.size());
 
-		grps = mngr.loadGroupsByBatchUid(codeOne.getBatchUid());
+		grps = mngr.loadByBatchUid(codeOne.getBatchUid());
 		assertNotNull(grps);
 		assertEquals(1, grps.size());
 		assertEquals(codeOne.getBatchUid(), grps.get(0).getBatchUid());
@@ -78,7 +78,7 @@ public class StrictLoadingTest extends ManagerTestSetup {
 		assertTrue(Id.isValidPkId(c2.getId()));
 
 		try {
-			mngr.loadGroupsByBatchUid(codeOne.getBatchUid());
+			mngr.loadByBatchUid(codeOne.getBatchUid());
 			fail("duplicate batch_uid should cause IllegalStateException");
 		} catch (IllegalStateException e) { /* expected behaviour */ }
 	}
