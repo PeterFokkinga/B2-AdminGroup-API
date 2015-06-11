@@ -35,6 +35,7 @@ import java.util.List;
  * @author <a href="peter [at] fokkinga.nl">Peter Fokkinga</a>
  */
 class AdminGroupDAO extends SimpleDAO<AdminGroup> {
+	enum Selector { GROUPS, GROUP_SETS, BOTH }
 
 	private static final Supplier<AdminGroupDAO> DAO_SUPPLIER = Suppliers.memoize(
 			new Supplier<AdminGroupDAO>() {
@@ -67,7 +68,20 @@ class AdminGroupDAO extends SimpleDAO<AdminGroup> {
 		Criteria criteria = query.getCriteria();
 		CriterionBuilder gcBuilder = criteria.createBuilder("gc");
 		criteria.add(gcBuilder.equal("BatchUID", uid));
+		return getDAOSupport().loadList(query);
+	}
 
+
+	public List<AdminGroup> loadByCourseId(Id crsId, Selector filter) {
+		SimpleJoinQuery query = new LoadGroupWithGroupCodeQuery(getDAOSupport().getMap(), "ag", "gc");
+		Criteria criteria = query.getCriteria();
+		CriterionBuilder agBuilder = criteria.createBuilder("ag");
+		criteria.add(agBuilder.equal("courseId", crsId));
+		if (filter == Selector.GROUPS) {
+			criteria.add(agBuilder.equal("isGroupSet", false));
+		} else if (filter == Selector.GROUP_SETS) {
+			criteria.add(agBuilder.equal("isGroupSet", true));
+		}
 		return getDAOSupport().loadList(query);
 	}
 

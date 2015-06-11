@@ -82,4 +82,16 @@ public class StrictLoadingTest extends ManagerTestSetup {
 			fail("duplicate batch_uid should cause IllegalStateException");
 		} catch (IllegalStateException e) { /* expected behaviour */ }
 	}
+
+	@Test
+	public void loadGroupsByCourseIdTest() {
+		AdminGroupManager mngr = AdminGroupManagerFactory.getStrictManager();
+		List<AdminGroup> grps = mngr.loadGroupsByCourseId(crs2.getId());
+		assertNotNull(grps);
+		assertEquals(0, grps.size());
+
+		grps = mngr.loadGroupsByCourseId(crs.getId());
+		assertEquals(1, grps.size());
+		assertFalse(grps.get(0).isGroupSet());
+	}
 }
