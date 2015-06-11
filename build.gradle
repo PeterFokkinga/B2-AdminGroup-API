@@ -19,7 +19,7 @@ ext {
   learnVersion = "9.1.201410.160373"
 }
 
-version "0.1"
+version "0.2"
 jar.baseName = "bb-admingroup"
 jar.destinationDir = new File(".")
 
