@@ -56,6 +56,15 @@ public interface AdminGroupManager {
 	List<AdminGroup> loadGroupsByCourseId(Id crsId);
 
 	/**
+	 * Get all group sets belonging to the course.
+	 *
+	 * @param crsId the ID of the course to retrieve the groups for
+	 * @return the group sets that are in the course;
+	 * the result may be empty but is never NULL
+	 */
+	List<AdminGroup> loadGroupSetsByCourseId(Id crsId);
+
+	/**
 	 * Delete the given group / group set. When deleting a group its group codes
 	 * will be deleted as well. When deleting a group set its child groups
 	 * (including any group codes) will be deleted as well.

@@ -116,4 +116,12 @@ public class StrictLoadingTest extends ManagerTestSetup {
 			assertFalse(grp.isGroupSet());
 		}
 	}
+
+	@Test
+	public void loadGroupSetsByCourseIdTest() {
+		AdminGroupManager mngr = AdminGroupManagerFactory.getStrictManager();
+		List<AdminGroup> grps = mngr.loadGroupSetsByCourseId(crs.getId());
+		assertEquals(1, grps.size());
+		assertTrue(grps.get(0).isGroupSet());
+	}
 }

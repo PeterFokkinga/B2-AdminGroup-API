@@ -41,6 +41,11 @@ public class StrictManagerImpl implements AdminGroupManager {
 	}
 
 
+	@Override public List<AdminGroup> loadGroupSetsByCourseId(Id crsId) {
+		return AdminGroupDAO.get().loadByCourseId(crsId, AdminGroupDAO.Selector.GROUP_SETS);
+	}
+
+
 	@Override public boolean addGroupToGroupSet(Id grpId, Id grpSetId) {
 		return AdminGroupDAO.get().makeGroupMemberOfGroupSet(grpId, grpSetId);
 	}
