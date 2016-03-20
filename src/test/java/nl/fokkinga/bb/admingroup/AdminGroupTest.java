@@ -38,7 +38,7 @@ public class AdminGroupTest {
 	public void properObjectTest() throws ValidationException, PersistenceException {
 		AdminGroup ag = new AdminGroup();
 		ag.setTitle("Hello, World!");
-		ag.setCourseId(AllTestsSuite.crs.getId());
+		ag.setCourseId(AllTestsSuite.crsTwo.getId());
 		ag.setGroupSet(true);
 		ag.setBatchUid("properobject");
 

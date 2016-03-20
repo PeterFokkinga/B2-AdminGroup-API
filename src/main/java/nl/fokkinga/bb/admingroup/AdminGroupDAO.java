@@ -110,7 +110,7 @@ class AdminGroupDAO extends SimpleDAO<AdminGroup> {
 			this.groupMap = groupMap;
 			this.groupAlias = groupAlias;
 			this.codeAlias = codeAlias;
-			addJoin(SimpleJoinQuery.JoinType.Inner, GroupCode.MAP, codeAlias, "GroupId", "id", true);
+			addJoin(JoinType.LeftOuter, GroupCode.MAP, codeAlias, "GroupId", "id", true);
 		}
 
 		@Override protected void processRow(ResultSet rst) throws SQLException, PersistenceException {
@@ -121,6 +121,11 @@ class AdminGroupDAO extends SimpleDAO<AdminGroup> {
 			List objects = (List) this._um.unmarshall();
 			AdminGroup grp = (AdminGroup) objects.get(0);
 			GroupCode gc = (GroupCode) objects.get(1);
+			if (gc == null) {
+				gc = new GroupCode();
+				gc.setCourseId(grp.getCourseId());
+				gc.setGroupId(grp.getId());
+			}
 			grp.setGroupCode(gc);
 			addResult(grp);
 		}

@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class ManagerTestSetup {
 	Course crs, crs2;
-	Group grpSet, grpOne;
+	Group grpSet, grpOne, grpTwo;
 	GroupCode codeOne;
 
 	@Before
@@ -40,5 +40,12 @@ public class ManagerTestSetup {
 		dao.persist(grpOne);
 		codeOne = new GroupCode(grpOne, "foo#bar");
 		GroupCodeDAO.get().persist(codeOne);
+
+		grpTwo = new Group();
+		grpTwo.setTitle("two");
+		grpTwo.setCourseId(crs.getId());
+		grpTwo.setSetId(grpSet.getId());
+		dao.persist(grpTwo);
+		// no group code!
 	}
 }

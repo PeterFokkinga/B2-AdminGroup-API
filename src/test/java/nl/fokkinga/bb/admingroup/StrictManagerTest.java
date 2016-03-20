@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 /**
  * @author <a href="mailto:peter [at] fokkinga.nl">Peter Fokkinga</a>
  */
-public class StrictManagerTest extends ManagerTestSetup{
+public class StrictManagerTest extends ManagerTestSetup {
 
 	@Test
 	public void insertTest() throws ValidationException, PersistenceException {
@@ -206,9 +206,9 @@ public class StrictManagerTest extends ManagerTestSetup{
 		AdminGroupManager mngr = AdminGroupManagerFactory.getStrictManager();
 		assertEquals(grpSet.getCourseId(), grpOne.getCourseId());
 		assertNotEquals(grpSet.getId(), grpOne.getSetId());
-		assertEquals(0, GroupDAO.get().loadGroupSetList(grpSet.getId()).size());
+		assertEquals(1, GroupDAO.get().loadGroupSetList(grpSet.getId()).size());
 
 		mngr.addGroupToGroupSet(grpOne.getId(), grpSet.getId());
-		assertEquals(1, GroupDAO.get().loadGroupSetList(grpSet.getId()).size());
+		assertEquals(2, GroupDAO.get().loadGroupSetList(grpSet.getId()).size());
 	}
 }
