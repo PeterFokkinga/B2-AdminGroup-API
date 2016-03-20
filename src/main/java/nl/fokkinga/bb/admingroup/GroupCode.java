@@ -98,6 +98,20 @@ public class GroupCode extends AbstractIdentifiable {
 
 
 	/**
+	 * Extracts the group id from a batch_uid as
+	 * @param uid a batch_uid
+	 * @return the numerical value of a group id (aka pk1), or -1 if the given
+	 *         batch_uid does not refer to a Blackboard Learn group id
+	 */
+	static long extractPk1(String uid) {
+		if (isEmpty(uid) || !uid.startsWith(BBLEARN_SOURCEDID_SOURCE + SOURCEDID_SEPARATOR)) {
+			return -1;
+		}
+		return Long.valueOf(uid.substring(uid.indexOf(SOURCEDID_SEPARATOR) + 1));
+	}
+
+
+	/**
 	 * Use the batch_uid to store a composite key. Composite keys are a
 	 * cornerstone of the IMS Enterprise data model and consist of a "source"
 	 * (identifier of the system where the ID originates) and an "id" (the

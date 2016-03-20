@@ -5,6 +5,7 @@ import blackboard.data.course.Group;
 import blackboard.persist.Id;
 import blackboard.persist.PersistenceException;
 import blackboard.persist.course.GroupDbPersister;
+import nl.fokkinga.bb.Util;
 import org.junit.Test;
 
 import java.util.List;
@@ -27,6 +28,19 @@ public class StrictLoadingTest extends ManagerTestSetup {
 		assertNotNull(grp);
 		assertEquals(codeOne, grp.getGroupCode());
 		assertEquals(grpOne.getId(), grp.getId());
+
+		grp = mngr.loadById(grpSet.getId()); // doesn't have a group code in the db
+		assertNotNull(grp);
+
+		GroupCode gc = grp.getGroupCode();
+		assertNotNull(gc);
+		assertNotNull(gc.getBatchUid());
+		assertTrue(gc.getBatchUid().startsWith(GroupCode.BBLEARN_SOURCEDID_SOURCE));
+		assertEquals(GroupCode.BBLEARN_SOURCEDID_SOURCE, gc.getSourcedIdSource());
+
+		String grpPk1 = String.valueOf(Util.toNumber(grpSet.getId()));
+		assertTrue(gc.getBatchUid().contains(grpPk1));
+		assertEquals(grpPk1, gc.getSourcedIdId());
 	}
 
 	@Test
@@ -53,6 +67,12 @@ public class StrictLoadingTest extends ManagerTestSetup {
 			mngr.loadSingleByBatchUid(codeOne.getBatchUid());
 			fail("duplicate batch_uid should cause IllegalStateException");
 		} catch (IllegalStateException e) { /* expected behaviour */ }
+
+		String batchUid = GroupCode.generateBatchUid(grpSet.getId());
+		grp = mngr.loadSingleByBatchUid(batchUid);
+		assertNotNull(grp);
+		assertEquals(grpSet.getId(), grp.getId());
+		assertEquals(batchUid, grp.getBatchUid());
 	}
 
 	@Test

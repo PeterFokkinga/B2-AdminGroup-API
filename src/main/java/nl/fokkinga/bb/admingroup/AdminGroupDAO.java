@@ -16,8 +16,7 @@
 
 package nl.fokkinga.bb.admingroup;
 
-import blackboard.persist.Id;
-import blackboard.persist.PersistenceException;
+import blackboard.persist.*;
 import blackboard.persist.dao.impl.SimpleDAO;
 import blackboard.persist.impl.*;
 import blackboard.persist.impl.mapping.DbObjectMap;
@@ -28,6 +27,7 @@ import com.google.common.base.Suppliers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -64,6 +64,20 @@ class AdminGroupDAO extends SimpleDAO<AdminGroup> {
 
 
 	public List<AdminGroup> loadByBatchUid(String uid) {
+		long grpPk1 = GroupCode.extractPk1(uid);
+		if (grpPk1 > 0) {
+			List<AdminGroup> result = new ArrayList<>(1);
+			try {
+				Id grpId = Id.generateId(AdminGroup.DATA_TYPE, grpPk1);
+				result.add(loadById(grpId));
+			} catch (KeyNotFoundException e) {
+				/* ignore */
+			} catch (PersistenceException e) {
+				throw new PersistenceRuntimeException("loadByBatchUid(" + uid
+						+ ") -> loadById(" + grpPk1 +"): " + e.getMessage(), e);
+			}
+			return result;
+		}
 		SimpleJoinQuery query = new LoadGroupWithGroupCodeQuery(getDAOSupport().getMap(), "ag", "gc");
 		Criteria criteria = query.getCriteria();
 		CriterionBuilder gcBuilder = criteria.createBuilder("gc");
