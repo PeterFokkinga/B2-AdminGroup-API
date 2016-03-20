@@ -196,4 +196,15 @@ public class GroupCodeDAOTest {
 		assertEquals(0, dao.loadByGroupId(grpOne.getId()).size());
 		assertEquals(1, dao.loadByGroupId(grpTwo.getId()).size());
 	}
+
+	@Test
+	public void undefinedBatchUidTest() {
+		GroupCodeDAO dao = GroupCodeDAO.get();
+		List<GroupCode> codes = dao.loadByGroupId(grpSet.getId());
+		assertEquals(0, codes.size());
+
+		String batchUid = GroupCode.generateBatchUid(grpSet.getId());
+		codes = dao.loadByBatchUid(batchUid);
+		assertEquals(0, codes.size());
+	}
 }

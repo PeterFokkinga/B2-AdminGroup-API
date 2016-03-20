@@ -28,7 +28,7 @@ import nl.fokkinga.bb.Util;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
 
-import static nl.fokkinga.bb.Util.isEmpty;
+import static nl.fokkinga.bb.Util.*;
 
 
 /**
@@ -64,10 +64,36 @@ public class GroupCode extends AbstractIdentifiable {
 
 	public GroupCode() {}
 
+
+	/**
+	 * Creates a group code based on given group and batch_uid. Any leading
+	 * and/or trailing whitespace will be trimmed from the batch_uid.
+	 *
+	 * @param grp the group; should not be NULL and have a valid (already
+	 *            persisted) id and course reference.
+	 * @param batchUid the batch_uid; empty or NULL values is allowed but
+	 *                 not recommended as it will cause a validation exception
+	 *                 when the object is persisted
+	 */
 	public GroupCode(Group grp, String batchUid) {
 		groupId = grp.getId();
 		courseId = grp.getCourseId();
-		this.batchUid = batchUid;
+		this.batchUid = makeSafe(batchUid);
+	}
+
+
+	/**
+	 * Generates a composite ("sourced id") batch uid for a group.
+	 *
+	 * @param grpId the id of a group
+	 * @return a batch uid to represent the group or an empty string if the given
+	 * group id was NULL or not a proper (already persisted) id.
+	 */
+	public static String generateBatchUid(Id grpId) {
+		if (Id.isValidPkId(grpId)) {
+			return BBLEARN_SOURCEDID_SOURCE + SOURCEDID_SEPARATOR + Util.toNumber(grpId);
+		}
+		return "";
 	}
 
 
@@ -81,7 +107,7 @@ public class GroupCode extends AbstractIdentifiable {
 	 *            empty or contain the separator character
 	 * @param id  the id part of the composite key; should not be NULL or empty
 	 * @throws IllegalArgumentException when one (or both) of the parameters
-	 *         are not valid
+	 *                                  are not valid
 	 */
 	public void setSourcedId(String src, String id) {
 		if (isEmpty(id) || isEmpty(src)) {
@@ -128,8 +154,31 @@ public class GroupCode extends AbstractIdentifiable {
 	}
 
 
-	public void setBatchUid(String value) { batchUid = value; }
-	public String getBatchUid() { return Util.makeSafe(batchUid); }
+	/**
+	 * Sets the batch_uid of this group code; leading and trailing whitespace
+	 * will be trimmed. You must persist this object to make this change
+	 * permanent.
+	 *
+	 * @param value the new batch_uid value; this setter won't fail if the value
+	 *              is NULL, but this will cause a validation exception when
+	 *              persisting
+	 */
+	public void setBatchUid(String value) {
+		batchUid = makeSafe(value);
+	}
+
+
+	/**
+	 * Gets the batch_uid or a generated one if batch_uid is not explicitly set.
+	 *
+	 * @return the batch_uid of this group code or an empty string when neither
+	 *         the batch_uid was defined nor the group id was valid
+	 * @see #generateBatchUid
+	 */
+	public String getBatchUid() {
+		return notEmpty(batchUid) ? Util.makeSafe(batchUid) : generateBatchUid(groupId);
+	}
+
 
 	public void setGroupId(Id value) { groupId = value; }
 	public Id getGroupId() { return groupId; }
@@ -152,7 +201,7 @@ public class GroupCode extends AbstractIdentifiable {
 	 * </ul>
 	 *
 	 * @throws ValidationException when one or more of the described requirements
-	 * are not met
+	 *                             are not met
 	 * @see ValidationException#getWarnings for a description of the failed
 	 * requirements
 	 */

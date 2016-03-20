@@ -1,8 +1,10 @@
 package nl.fokkinga.bb.admingroup;
 
 import blackboard.data.ValidationException;
+import blackboard.persist.KeyNotFoundException;
 import blackboard.persist.PersistenceException;
 import nl.fokkinga.bb.AllTestsSuite;
+import nl.fokkinga.bb.Util;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -56,5 +58,18 @@ public class AdminGroupTest {
 		ag.setGroupSet(false);
 		ag.setSetId(AllTestsSuite.mainGroupSet.getId());
 		assertTrue(ag.toString().contains("set_pk1="));
+	}
+
+	@Test
+	public void groupWithoutCodeTest() {
+		try {
+			AdminGroup ag = AdminGroupDAO.get().loadById(AllTestsSuite.mainGroupSet.getId());
+			assertNotNull(ag.getGroupCode());
+			assertNotNull(ag.getBatchUid());
+			assertTrue(ag.getBatchUid().startsWith(GroupCode.BBLEARN_SOURCEDID_SOURCE));
+			assertTrue(ag.getBatchUid().contains(String.valueOf(Util.toNumber(AllTestsSuite.mainGroupSet.getId()))));
+		} catch (KeyNotFoundException e) {
+			fail("group without group code should be returned by AdminGroupDAO");
+		}
 	}
 }
